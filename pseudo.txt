@@ -1,0 +1,41 @@
+The goal of pipex is to simulate pipes | in the shell.
+Pipex has to reproduce exactly the shell command:
+
+./pipex file1 cmd1 cmd2 file2
+
+will behave like:
+
+< file1 cmd1 | cmd2 > file2
+
+for example:
+
+< test.txt grep hello | wc -w >  outfile
+
+- < symbol = input redirection
+    - it redirects the content of infile to stdin, so that when grep reads from stdin, it gets the content of infile.
+- | symbol = output redirection
+    - redirects the output of grep to the input of wc -w.
+- >> symbol = input appendment
+    - appends the output of left command to the end of outfile.
+- << symbol = input "redirection"
+    - reads from stdin until encounters a specific limiter on stdin.
+    - cmd << LIMITER | cmd1 >> file
+
+pipes are usually represented as file descriptor pairs, read end and write end.
+
+main checklist
+
+- check the existence of infile and outfile
+- be sure to understand what > does when the file does not exist
+- create the necessary pipe(s)
+- create a child process for each command (1 for mandatory, multiple for bonus)
+    - (remember that when using here_doc, it is the 2nd arg, so not a command)
+- wait for all the processes to end before writing to the outfile
+
+execute checklist
+- remember that execve() needs the path to a binary file as parameter
+    - find where the commands binaries are stored on your computer
+    - before going further, you have to know how to find any command binary
+- check in all possible locations if the binary (command) requested by the user exists
+- "build" the arguments array for the command
+- execute the command using execve()
