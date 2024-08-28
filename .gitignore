@@ -1,0 +1,5 @@
+*.o
+*.swp
+*.dSYM
+.vscode
+pseudo.txt
