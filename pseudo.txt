@@ -39,3 +39,20 @@ execute checklist
 - check in all possible locations if the binary (command) requested by the user exists
 - "build" the arguments array for the command
 - execute the command using execve()
+
+find PATH, if PATH is not found, exit with error(will  be tested in eval with unset PATH)
+if command is .g. ls
+
+execute command
+
+dup2 = opens fd, infile and outfile, close the rest
+
+if 1st command fails, exit code is 0, if second cmd fails, exit code is 127
+
+when process id = 0, it is the child process 
+
+pid == 0  || pid != 0 <-- are you the child, or are you the parent?
+
+exevce overwrites all memory, replaces with new values based on what is passed into it
+
+if execve == -1,  exec_error
