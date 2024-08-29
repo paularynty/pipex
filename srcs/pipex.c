@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:07:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/08/28 15:13:52 by prynty           ###   ########.fr       */
+/*   Updated: 2024/08/29 14:26:05 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static inline void	return_exit_code(t_pipex *pipex)
 {
     int exitcode;
     
+	//or exitcode = (pipex->exitcode >> 8) & 255;
     exitcode = (pipex->exitcode & 0xff00) >> 8;
     exit (exitcode);
 }
@@ -46,15 +47,6 @@ int	main(int argc, char **argv, char **envp)
 		ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile\n");
 		exit (1);
 	}
-	if (pipe(pipe_fd) == -1)
-	{
-		ft_putstr_fd("Pipe failed", 2);
-		exit (-1);
-	}
-	if (pid == -1)
-		exit (-1);
-	// if (!pid)
-	// 	child_process(pipex.argv, pipe_fd, pipex.envp);
-	// parent_process(pipex.argv, pipe_fd, pipex.envp);
+	exec_pipex(&pipex);
 	return_exit_code(&pipex);
 }

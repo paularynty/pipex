@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 12:05:04 by prynty            #+#    #+#              #
-#    Updated: 2024/08/27 14:25:31 by prynty           ###   ########.fr        #
+#    Updated: 2024/08/29 18:42:51 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ LIGHT_GRAY		= \033[1;37m
 RED				= \033[1;91m
 ORANGE 			= \e[1m\e[38;5;202m
 YELLOW 			= \033[0;93m
+YELLOW_BOLD		= \033[1;93m
 GREEN			= \033[1;92m
 BLUE 			= \033[0;94m
 BLUE_BOLD 		= \033[1;94m
@@ -33,11 +34,12 @@ PINK			= \e[1m\e[38;5;212m
 WHITE 			= \033[1;97m
 
 OBJ_READY		= echo "📥 $(ORANGE)Compiled pipex files!$(RESET)"
-COMP_LIBFT		= echo "\n📝 $(YELLOW)Compiling Libft...$(RESET)$(DARK_GRAY)"
-PIP_READY		= echo "\n🧮 $(GREEN)pipex ready!$(RESET)"
-CLEANING		= echo "\n💧 $(CYAN)Cleaning...$(RESET)$(DARK_GRAY)"
-CLEANED			= echo "💧$(CYAN_BOLD)Successfully cleaned all object files!$(RESET)"
-FCLEANING		= echo "\n🧼 $(BLUE)Deep cleaning...$(RESET)$(DARK_GRAY)"
+COMP_LIBFT		= echo "📝 $(YELLOW)Compiling Libft...$(RESET)"
+LIBFT_READY		= echo "📝 $(YELLOW_BOLD)Libft compiled!$(RESET)"
+PIP_READY		= echo "🧮 $(GREEN)pipex ready!$(RESET)"
+CLEANING		= echo "💧 $(CYAN)Cleaning...$(RESET)"
+CLEANED			= echo "💧 $(CYAN_BOLD)Successfully cleaned all object files!$(RESET)"
+FCLEANING		= echo "🧼 $(BLUE)Deep cleaning...$(RESET)"
 FCLEANED		= echo "🧼 $(BLUE_BOLD)Successfully cleaned all executable files!$(RESET)"
 REMAKE			= echo "✅ $(GREEN)Successfully cleaned and rebuilt everything!$(RESET)"
 
@@ -45,7 +47,8 @@ NAME			= pipex
 CFLAGS			= -Wall -Wextra -Werror
 LIBFT			= ./libft/libft.a
 
-FILES 			= pipex.c \
+FILES			= 	pipex.c \
+					utils.c \
 
 SRCS			= $(addprefix srcs/, $(FILES))
 OBJS			= $(addprefix objs/, $(FILES:.c=.o))
@@ -57,32 +60,29 @@ objs:
 	@mkdir -p libft/objs/
 
 objs/%.o: srcs/%.c | objs
-	@cc $(FLAGS) -c $< -o $@ && echo "$(DARK_GRAY)Compiled: $@ $(RESET)"
+	@cc $(FLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	@$(OBJ_READY)
 	@$(COMP_LIBFT)
-	@make -C ./libft
+	@make -s -C ./libft > /dev/null
 	@cp $(LIBFT) .
+	@$(LIBFT_READY)
+	@$(OBJ_READY)
 	@cc -g $(FLAGS) $(SRCS) $(LIBFT) -o $(NAME)
 	@chmod 777 $(NAME)
-	@$(SL_READY)
-
-comp_libft:
-	$(COMP_LIBFT)
-	@make -C ./libft
+	@$(PIP_READY)
 
 clean:
 	@$(CLEANING)
 	@rm -rf $(OBJS)
 	@rm -rf objs/
-	@cd libft && make clean
+	@make clean -s -C libft
 	@$(CLEANED)
 
 fclean: clean
 	@$(FCLEANING)
 	@rm -rf $(NAME)
-	@cd libft && make fclean
+	@make fclean -s -C libft
 	@rm -rf libft.a
 	@$(FCLEANED)
 
