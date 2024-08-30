@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:07:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/08/29 14:26:05 by prynty           ###   ########.fr       */
+/*   Updated: 2024/08/30 16:47:06 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,31 @@ static inline void	return_exit_code(t_pipex *pipex)
 {
     int exitcode;
     
-	//or exitcode = (pipex->exitcode >> 8) & 255;
-    exitcode = (pipex->exitcode & 0xff00) >> 8;
+	exitcode = (pipex->exitcode >> 8) & 255;
+    // exitcode = (pipex->exitcode & 0xff00) >> 8;
     exit (exitcode);
 }
 
-// void	parent_process(char **argv, int *pipe_fd, char **envp)
+// static void	parent_process(char **argv, int *pipe_fd, char **envp)
 // {
 // 	int	fd;
 
-// 	fd = open_file(argv[4], 1);
+// 	fd = open_outfile(argv[4], 1);
 // 	dup2(fd, 1);
 // 	dup2(pipe_fd[0], 0);
 // 	close(pipe_fd[1]);
-// 	//execute(pipex->argv[2], pipex->envp)
+// 	//execute_command(argv[3], envp);
+// }
+
+// static void	child_process(char **argv, int *pipe_fd, char **envp)
+// {
+// 	int	fd;
+
+// 	fd = open_infile(argv[1], 0);
+// 	dup2(fd, 0);
+// 	dup2(pipe_fd[1], 1);
+// 	close(pipe_fd[0]);
+// 	//execute_command(argv[2], envp);
 // }
 
 int	main(int argc, char **argv, char **envp)

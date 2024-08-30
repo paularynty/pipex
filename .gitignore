@@ -2,5 +2,6 @@
 *.swp
 *.dSYM
 .vscode
-pseudo.txt
 pipex
+libft.a
+*.txt

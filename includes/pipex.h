@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:58:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/08/29 18:03:55 by prynty           ###   ########.fr       */
+/*   Updated: 2024/08/30 16:23:23 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,5 @@ typedef struct s_pipex
 }   t_pipex;
 
 void    exec_pipex(t_pipex *pipex);
+int     open_infile(t_pipex *pipex, int *fd);
+int     open_outfile(t_pipex *pipex, int *prev_fd);
