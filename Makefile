@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 12:05:04 by prynty            #+#    #+#              #
-#    Updated: 2024/08/30 16:46:22 by prynty           ###   ########.fr        #
+#    Updated: 2024/09/02 13:06:01 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,6 @@ CFLAGS			= -Wall -Wextra -Werror
 LIBFT			= ./libft/libft.a
 
 FILES			= 	pipex.c \
-					utils.c \
 
 SRCS			= $(addprefix srcs/, $(FILES))
 OBJS			= $(addprefix objs/, $(FILES:.c=.o))
