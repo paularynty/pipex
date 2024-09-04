@@ -6,19 +6,11 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:07:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/02 13:31:41 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/02 13:34:59 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-// void    fork_error(int *fd)
-// {
-//     close(fd[0]);
-//     close(fd[1]);
-//     perror("Last command fork failed");
-//     exit (1);
-// }
 
 void    dup_and_close(int from_fd1, int to_fd1, int from_fd2, int to_fd2)
 {
