@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/17 18:26:18 by prynty            #+#    #+#              #
-#    Updated: 2024/08/27 14:31:54 by prynty           ###   ########.fr        #
+#    Updated: 2024/09/07 19:06:02 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRCS		= ft_atoi.c \
 		  ft_isascii.c \
 		  ft_isdigit.c \
 		  ft_isprint.c \
+		  ft_isspace.c \
 		  ft_itoa.c \
 		  ft_lstadd_back.c \
 		  ft_lstadd_front.c \
@@ -64,12 +65,19 @@ SRCS		= ft_atoi.c \
 		  ft_memmove.c \
 		  ft_memset.c \
 		  ft_print_char.c \
+		  ft_print_char_fd.c \
 		  ft_print_hex.c \
-		  ft_print_nbr_unsigned.c \
+		  ft_print_hex_fd.c \
 		  ft_print_nbr.c \
+		  ft_print_nbr_fd.c \
+		  ft_print_nbr_unsigned.c \
+		  ft_print_nbr_unsigned_fd.c \
 		  ft_print_ptr.c \
+		  ft_print_ptr_fd.c \
 		  ft_print_str.c \
+		  ft_print_str_fd.c \
 		  ft_printf.c \
+		  ft_printf_fd.c \
 		  ft_putchar_fd.c \
 		  ft_putendl_fd.c \
 		  ft_putnbr_fd.c \
@@ -89,10 +97,10 @@ SRCS		= ft_atoi.c \
 		  ft_strrchr.c \
 		  ft_strtrim.c \
 		  ft_substr.c \
-		  ft_toupper.c \
 		  ft_tolower.c \
-		  get_next_line_utils.c \
+		  ft_toupper.c \
 		  get_next_line.c \
+		  get_next_line_utils.c \
 
 CFLAGS 		= -Wall -Wextra -Werror
 
@@ -106,7 +114,7 @@ $(NAME):	$(OBJS)
 		@$(COMP_LIBFT)
 
 %.o: %.c
-		@cc $(CFLAGS) -c $< -o $@ && echo "$(DARK_GRAY)Compiled: $@ $(RESET)"
+		@cc $(CFLAGS) -c $< -o $@
 
 clean:
 		@rm -f $(OBJS)

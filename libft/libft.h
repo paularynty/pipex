@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:24:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/07/31 14:08:50 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/07 19:03:50 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		ft_isalpha(int c);
 int		ft_isascii(int c);
 int		ft_isdigit(int c);
 int		ft_isprint(int c);
+int		ft_isspace(char *str);
 int		ft_toupper(int c);
 int		ft_tolower(int c);
 
@@ -91,14 +92,23 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
-//printf
-int		ft_printf(const char *format, ...);
+//ft_printf
+int		ft_printf(const char *str, ...);
 int		ft_print_char(char c);
 int		ft_print_str(const char *str);
 int		ft_print_nbr(int n);
 int		ft_print_nbr_unsigned(unsigned int n);
 int		ft_print_ptr(unsigned long long ptr);
 int		ft_print_hex(unsigned long long n, const char format);
+
+//ft_printf_fd
+int		ft_printf_fd(int fd, const char *str, ...);
+int		ft_print_char_fd(int fd, char c);
+int		ft_print_str_fd(int fd, const char *str);
+int		ft_print_nbr_fd(int fd, int n);
+int		ft_print_nbr_unsigned_fd(int fd, unsigned int n);
+int		ft_print_ptr_fd(int fd, unsigned long long ptr);
+int		ft_print_hex_fd(int fd, unsigned long long n, const char format);
 
 //gnl
 char	*get_next_line(int fd);

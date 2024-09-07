@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handling.c                                   :+:      :+:    :+:   */
+/*   ft_print_str_fd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/02 13:34:50 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/07 19:58:34 by prynty           ###   ########.fr       */
+/*   Created: 2024/05/23 12:12:39 by prynty            #+#    #+#             */
+/*   Updated: 2024/09/07 18:29:40 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h"
+#include "libft.h"
 
-// // void    fork_error(int *fd)
-// // {
-// //     close(fd[0]);
-// //     close(fd[1]);
-// //     perror("Last command fork failed");
-// //     exit (1);
-// // }
-
-void	cmd_error(char **cmd, char *msg, int to_free)
+int	ft_print_str_fd(int fd, const char *str)
 {
-	ft_printf_fd(2, "pipex: %s: %s\n", *cmd, msg);
-	if (to_free)
-		free_array(&cmd);
-	exit(127);
-}
-// }
+	int	i;
+	int	temp;
 
-// void    exec_error(char *path, char *split_cmd)
-// {
-// }
+	i = 0;
+	temp = i;
+	if (!str)
+	{
+		if (write(fd, "(null)", 6) < 0)
+			return (-1);
+		return (6);
+	}
+	while (str[i])
+	{
+		i += ft_print_char_fd(fd, str[i]);
+		if (i < temp)
+			return (-1);
+	}
+	return (i);
+}

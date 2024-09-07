@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handling.c                                   :+:      :+:    :+:   */
+/*   ft_print_nbr_unsigned_fd.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/02 13:34:50 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/07 19:58:34 by prynty           ###   ########.fr       */
+/*   Created: 2024/05/23 12:13:16 by prynty            #+#    #+#             */
+/*   Updated: 2024/09/07 18:27:29 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h"
+#include "libft.h"
 
-// // void    fork_error(int *fd)
-// // {
-// //     close(fd[0]);
-// //     close(fd[1]);
-// //     perror("Last command fork failed");
-// //     exit (1);
-// // }
-
-void	cmd_error(char **cmd, char *msg, int to_free)
+int	ft_print_nbr_unsigned_fd(int fd, unsigned int n)
 {
-	ft_printf_fd(2, "pipex: %s: %s\n", *cmd, msg);
-	if (to_free)
-		free_array(&cmd);
-	exit(127);
-}
-// }
+	int		len;
+	int		value;
+	char	c;
 
-// void    exec_error(char *path, char *split_cmd)
-// {
-// }
+	len = 0;
+	if (n > 9)
+	{
+		value = ft_print_nbr_unsigned_fd(fd, (n / 10));
+		if (value == -1)
+			return (value);
+		len += value;
+	}
+	c = (n % 10) + '0';
+	if (ft_print_char_fd(fd, c) < 0)
+		return (-1);
+	len++;
+	return (len);
+}

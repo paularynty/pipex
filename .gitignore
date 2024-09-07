@@ -5,3 +5,5 @@
 pipex
 libft.a
 *.txt
+.test.c
+a.out
