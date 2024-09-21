@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:58:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/10 16:30:33 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/21 15:28:48 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define TRUE 1
 # define FALSE 0
 
-# define NO_FILE_OR_DIR "No such file or directory"
+# define NO_FILE_OR_DIR "No such file or directory\n"
 
 typedef enum e_errors
 {
@@ -45,7 +45,10 @@ typedef struct s_pipex
 	int				fd_out; //can replace with stdout_fileno
 	int				pipe_fd[2];
 	int				fd[2];
-	pid_t			pid;
+	int				status1;
+	int				status2;
+	pid_t			pid1;
+	pid_t			pid2;
 }	t_pipex;
 
 void	exec_pipex(t_pipex *pipex);
@@ -53,13 +56,13 @@ int		open_infile(t_pipex *pipex, int *fd);
 int		open_outfile(t_pipex *pipex, int *prev_fd);
 
 //pipe, dup, etc
-void	dup_and_close(int from_fd1, int to_fd1, int from_fd2, int to_fd2);
+// void	dup_and_close(int from_fd1, int to_fd1, int from_fd2, int to_fd2);
 int		open_infile(t_pipex *pipex, int *fd);
 int		open_outfile(t_pipex *pipex, int *prev_fd);
-void	create_pipe_fork(pid_t *pid, int *pipe_fd);
+// void	create_pipe_fork(pid_t *pid, int *pipe_fd);
 
 //execution
-void	exec_command(t_pipex *pipex, char *cmd);
+void	exec_command(t_pipex *pipex, char *cmd, char **envp);
 char	**split_command(char *cmd);
 char	**split_word(char **array, char *cmd, int wordcount, int order);
 char	*find_path(char **envp, char **split_cmd);

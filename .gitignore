@@ -7,3 +7,4 @@ libft.a
 *.txt
 .test.c
 a.out
+ppx_err_tester.sh

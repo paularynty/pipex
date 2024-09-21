@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 13:35:45 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/10 16:00:32 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/21 15:36:29 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ static inline void	exec_error(char *path, char **cmd)
 			free(path);
 		if (ft_strchr(cmd[0], '/'))
 		{
-			cmd_error(cmd, "Is a directory", TRUE);
+			cmd_error(cmd, "Is a directory\n", TRUE);
 			exit(126); //cmd error overwrites exit with 127
 		}
 		else
 		{
-			cmd_error(cmd, "Command not found", TRUE);
+			cmd_error(cmd, "command not found\n", TRUE);
 			exit(127);
 		}
 	}
-	ft_printf_fd(2, "pipex: %s, %s\n", path, strerror(errno));
+	ft_printf_fd(2, "pipex: %s: %s\n", path, strerror(errno));
 	free_array(&cmd);
 	if (path)
 		free(path);
@@ -44,7 +44,7 @@ char	**split_command(char *cmd)
 	if (!cmd)
 		return (NULL);
 	if (ft_isspace(cmd))
-		cmd_error(&cmd, "Command not found", FALSE);
+		cmd_error(&cmd, "command not found", FALSE);
 	wordcount = count_words(cmd);
 	array = (char **)malloc(sizeof(char *) * (wordcount + 1));
 	if (!array)
@@ -53,7 +53,7 @@ char	**split_command(char *cmd)
 	return (array);
 }
 
-void	exec_command(t_pipex *pipex, char *cmd)
+void	exec_command(t_pipex *pipex, char *cmd, char **envp)
 {
 	char	**split_cmd;
 	char	*path;
@@ -61,9 +61,11 @@ void	exec_command(t_pipex *pipex, char *cmd)
 	split_cmd = split_command(cmd);
 	if (!split_cmd)
 		exit(1);
-	path = find_path(pipex->envp, split_cmd);
+	path = find_path(envp, split_cmd);
 	if (!path)
-		cmd_error(split_cmd, "Command not found", TRUE);
-	execve(path, split_cmd, pipex->envp);
-	exec_error(path, split_cmd);
+		cmd_error(split_cmd, "command not found", TRUE);
+	// execve(path, split_cmd, envp);
+	// exec_error(path, split_cmd);
+	if (execve(path, split_cmd, envp) == -1)
+		exec_error(path, split_cmd);
 }
