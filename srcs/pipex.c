@@ -6,11 +6,22 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:07:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/21 15:33:53 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/23 16:13:01 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
+static int	check_args(t_pipex *pipex)
+{
+	if (pipex->argc != 5)
+	{
+		ft_printf_fd(2, "Usage: ./pipex infile cmd1 cmd2 outfile\n");
+		pipex->exitcode = 1;
+		return (1);
+	}
+	return (0);
+}
 
 // static void	first_cmd(t_pipex *pipex, pid_t *pid, int *pipe_fd)
 // {
@@ -100,14 +111,11 @@ static int	open_file(char *file, int in_or_out)
 		result = open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (result == -1)
 	{
-	// strerror(errno);
-		ft_printf_fd(2, "%s: %s: %s\n", "pipex", pipex->argv[1],
-			strerror(errno));
+		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[1], strerror(errno));
 		close (in_or_out);
 		exit(1);
 	}
 	return (result);
-	
 }
 
 // static void	child(char **argv, int *pipe_fd, char **envp)
@@ -139,31 +147,17 @@ static void	parent(t_pipex *pipex, char **argv, char **envp)
 	// waitpid(pipex->pid, &pipex->exitcode, 0);
 }
 
-static inline void	return_exit_code(t_pipex *pipex)
+static inline int	return_exit_code(t_pipex *pipex)
 {
 	int	exitcode;
 
 	exitcode = (pipex->exitcode >> 8) & 255;
+	ft_printf("Process exited with exit code %d\n", exitcode);
 	exit(exitcode);
-}
-
-static void	check_args(int argc)
-{
-	if (argc != 5)
-	{
-		ft_printf_fd(2, "Usage: ./pipex infile cmd1 cmd2 outfile\n");
-		exit(1);
-	}
 }
 
 static void	create_pipe(t_pipex *pipex, char **argv, char **envp)
 {
-	pipex->fd_in = open(argv[1], O_RDONLY);
-	if (pipex->fd_in < 0)
-		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[1], strerror(errno));
-	pipex->fd_out = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
-	if (pipex->fd_in < 0)
-		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[4], strerror(errno));
 	if (pipe(pipex->fd) < 0)
 	{
 		perror("Pipe failed");
@@ -179,6 +173,16 @@ static void	create_pipe(t_pipex *pipex, char **argv, char **envp)
 	waitpid(pipex->pid2, &pipex->status2, 0);
 }
 
+static void	open_files(t_pipex *pipex)
+{
+	pipex->fd_in = open(pipex->argv[1], O_RDONLY);
+	if (pipex->fd_in < 0)
+		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[1], strerror(errno));
+	pipex->fd_out = open(pipex->argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
+	if (pipex->fd_out < 0)
+		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[4], strerror(errno));
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	pipex;
@@ -186,7 +190,11 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	pid;
 
 	pipex.exitcode = 0;
-	check_args(argc);
+	pipex.argc = argc;
+	pipex.argv = argv;
+	if (check_args(&pipex))
+		return (pipex.exitcode);
+	open_files(&pipex);
 	create_pipe(&pipex, argv, envp);
 	// if (pipe(pipe_fd) == -1)
 	// {

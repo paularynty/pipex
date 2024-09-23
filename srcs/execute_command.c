@@ -6,13 +6,13 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 13:35:45 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/21 15:36:29 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/23 16:25:44 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-static inline void	exec_error(char *path, char **cmd)
+static int	exec_error(t_pipex *pipex, char *path, char **cmd)
 {
 	if (!access(cmd[0], F_OK) && !access(cmd[0], X_OK))
 	{
@@ -21,7 +21,8 @@ static inline void	exec_error(char *path, char **cmd)
 		if (ft_strchr(cmd[0], '/'))
 		{
 			cmd_error(cmd, "Is a directory\n", TRUE);
-			exit(126); //cmd error overwrites exit with 127
+			// exit(126); //cmd error overwrites exit with 127
+			pipex->exitcode = 126;
 		}
 		else
 		{
@@ -33,7 +34,8 @@ static inline void	exec_error(char *path, char **cmd)
 	free_array(&cmd);
 	if (path)
 		free(path);
-	exit(126);
+	pipex->exitcode = 126;
+	return (pipex->exitcode);
 }
 
 char	**split_command(char *cmd)
@@ -67,5 +69,5 @@ void	exec_command(t_pipex *pipex, char *cmd, char **envp)
 	// execve(path, split_cmd, envp);
 	// exec_error(path, split_cmd);
 	if (execve(path, split_cmd, envp) == -1)
-		exec_error(path, split_cmd);
+		exec_error(pipex, path, split_cmd);
 }
