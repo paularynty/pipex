@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 13:35:45 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/23 16:25:44 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/25 13:13:14 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ static int	exec_error(t_pipex *pipex, char *path, char **cmd)
 			exit(127);
 		}
 	}
-	ft_printf_fd(2, "pipex: %s: %s\n", path, strerror(errno));
+	ft_putstr_fd("pipex: ", 2);
+	ft_putendl_fd(path, 2);
+	strerror(errno);
+	// ft_printf_fd(2, "pipex: %s: %s\n", path, strerror(errno));
 	free_array(&cmd);
 	if (path)
 		free(path);

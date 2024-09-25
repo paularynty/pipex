@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 13:41:38 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/21 09:23:44 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/25 11:15:17 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static char	**get_envp_path(char **envp, char **cmd)
 		envp++;
 	if (!*envp)
 		cmd_error(cmd, NO_FILE_OR_DIR, TRUE);
-		// cmd_error(cmd, NO_FILE_OR_DIR, TRUE);
 	split_envp = ft_split(*envp + 5, ':');
 	return (split_envp);
 }
@@ -61,11 +60,11 @@ char	*find_path(char **envp, char **split_cmd)
 	if (ft_strchr(*split_cmd, '/'))
 	{
 		if (access(*split_cmd, F_OK) == 0)
-			//return (ft_strdup(split_cmd));
-		{
-			dup_cmd = ft_strdup(*split_cmd);
-			return (dup_cmd);
-		}
+			return (ft_strdup(*split_cmd));
+		// {
+		// 	dup_cmd = ft_strdup(*split_cmd);
+		// 	return (dup_cmd);
+		// }
 		else
 			cmd_error(split_cmd, NO_FILE_OR_DIR, TRUE);
 	}

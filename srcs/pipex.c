@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:07:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/23 16:13:01 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/25 13:15:07 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,75 +119,101 @@ static int	open_file(char *file, int in_or_out)
 }
 
 // static void	child(char **argv, int *pipe_fd, char **envp)
-static void	child(t_pipex *pipex, char **argv, char **envp)
+static void	first_child(t_pipex *pipex, int pipe_fd[2], char **envp)
 {
 	// t_pipex	*pipex;
-	int		fd;
+	// int		fd;
 
-	fd = open_file(argv[1], 0);
+	// fd = open_file(argv[1], 0);
 	// dup_and_close(fd, 0, pipe_fd[1], 1);
-	dup2(fd, 0);
-	dup2(pipex->fd[1], 1);
-	close(pipex->fd[0]);
-	exec_command(pipex, argv[2], envp);
+	dup2(pipex->fd_in, 0);
+	close(pipex->fd_in);
+	close(pipex->fd_out);
+	dup2(pipe_fd[1], 1);
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	exec_command(pipex, pipex->argv[2], envp);
 }
 
 // static void	parent(char **argv, int *pipe_fd, char **envp)
-static void	parent(t_pipex *pipex, char **argv, char **envp)
+static void	second_child(t_pipex *pipex, int pipe_fd[2], char **envp)
 {
 	// t_pipex	*pipex;
-	int		fd;
+	// int		fd;
 	
-	fd = open_file(argv[4], 1);
+	// fd = open_file(argv[4], 1);
 	// dup_and_close(fd, 1, pipe_fd[0], 0);
-	dup2(fd, 1);
-	dup2(pipex->fd[0], 0);
-	close(pipex->fd[1]);
-	exec_command(pipex, argv[3], envp);
+	dup2(pipex->fd_out, 1);
+	close(pipex->fd_in);
+	close(pipex->fd_out);
+	dup2(pipe_fd[0], 0);
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	exec_command(pipex, pipex->argv[3], envp);
 	// waitpid(pipex->pid, &pipex->exitcode, 0);
 }
 
 static inline int	return_exit_code(t_pipex *pipex)
 {
-	int	exitcode;
+	// int exitcode = (pipex->exitcode >> 8) & 255;
+	ft_printf_fd(2, "Process exited with exit code %d\n", pipex->exitcode);
+	exit(pipex->exitcode);
+}
 
-	exitcode = (pipex->exitcode >> 8) & 255;
-	ft_printf("Process exited with exit code %d\n", exitcode);
-	exit(exitcode);
+static void	close_files(t_pipex *pipex, int pipe_fd[2])
+{
+	if (pipex->fd_in > -1)
+		close(pipex->fd_in);
+	if (pipex->fd_out > -1)
+		close(pipex->fd_out);
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
 }
 
 static void	create_pipe(t_pipex *pipex, char **argv, char **envp)
 {
-	if (pipe(pipex->fd) < 0)
+	pid_t	pid1;
+	pid_t	pid2;
+	int		pipe_fd[2];
+	
+	if (pipe(pipe_fd) < 0)
 	{
 		perror("Pipe failed");
 		exit(1);
 	}
-	pipex->pid1 = fork();
-	if (pipex->pid1 == 0)
-		child(pipex, argv, envp);
-	pipex->pid2 = fork();
-	if (pipex->pid2 == 0)
-		parent(pipex, argv, envp);
-	waitpid(pipex->pid1, &pipex->status1, 0);
-	waitpid(pipex->pid2, &pipex->status2, 0);
+	pid1 = fork();
+	if (pid1 == 0)
+	{
+		ft_putstr_fd("First child\n", 2);
+		first_child(pipex, pipe_fd, envp);
+	}
+	pid2 = fork();
+	if (pid2 == 0)
+	{
+		ft_putstr_fd("Second child\n", 2);
+		second_child(pipex, pipe_fd, envp);
+	}
+	close_files(pipex, pipe_fd);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, &pipex->status2, 0); //should exit status be a specific value?
 }
 
 static void	open_files(t_pipex *pipex)
 {
 	pipex->fd_in = open(pipex->argv[1], O_RDONLY);
 	if (pipex->fd_in < 0)
-		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[1], strerror(errno));
+		ft_printf_fd(2, "pipex: %s: %s\n", strerror(errno), pipex->argv[1]);
 	pipex->fd_out = open(pipex->argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
 	if (pipex->fd_out < 0)
-		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[4], strerror(errno));
+	{
+		pipex->exitcode = 1;
+		ft_printf_fd(2, "pipex: %s: %s\n", strerror(errno), pipex->argv[4]);
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	pipex;
-	int		pipe_fd[2];
-	pid_t	pid;
 
 	pipex.exitcode = 0;
 	pipex.argc = argc;
