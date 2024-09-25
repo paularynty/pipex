@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 12:05:04 by prynty            #+#    #+#              #
-#    Updated: 2024/09/10 16:28:07 by prynty           ###   ########.fr        #
+#    Updated: 2024/09/25 15:51:46 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,6 @@ FILES			= 	pipex.c \
 					command_utils.c \
 					execute_command.c \
 					error_handling.c \
-					find_path.c \
 
 SRCS			= $(addprefix srcs/, $(FILES))
 OBJS			= $(addprefix objs/, $(FILES:.c=.o))

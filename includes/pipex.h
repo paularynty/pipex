@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:58:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/21 15:28:48 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/25 16:44:37 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define TRUE 1
 # define FALSE 0
 
-# define NO_FILE_OR_DIR "No such file or directory\n"
+# define NO_FILE_OR_DIR "No such file or directory"
 
 typedef enum e_errors
 {
@@ -44,11 +44,8 @@ typedef struct s_pipex
 	int				fd_in; //can replace with stdin_fileno
 	int				fd_out; //can replace with stdout_fileno
 	int				pipe_fd[2];
-	int				fd[2];
 	int				status1;
 	int				status2;
-	pid_t			pid1;
-	pid_t			pid2;
 }	t_pipex;
 
 void	exec_pipex(t_pipex *pipex);
@@ -65,7 +62,7 @@ int		open_outfile(t_pipex *pipex, int *prev_fd);
 void	exec_command(t_pipex *pipex, char *cmd, char **envp);
 char	**split_command(char *cmd);
 char	**split_word(char **array, char *cmd, int wordcount, int order);
-char	*find_path(char **envp, char **split_cmd);
+// char	*find_path(char **envp, char **split_cmd);
 
 //utils
 int		count_words(char *cmd);
