@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:58:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/25 16:44:37 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/26 13:09:27 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # define TRUE 1
 # define FALSE 0
 
+# define CMD_NOT_FOUND "command not found"
+# define IS_DIR "Is a directory"
 # define NO_FILE_OR_DIR "No such file or directory"
 
 typedef enum e_errors
@@ -68,6 +70,7 @@ char	**split_word(char **array, char *cmd, int wordcount, int order);
 int		count_words(char *cmd);
 
 //error handling
+void	print_error(char *file, char *msg);
 void	cmd_error(char **cmd, char *msg, int to_free);
 void	free_array(char ***str);
 

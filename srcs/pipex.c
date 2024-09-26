@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:07:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/25 16:59:02 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/26 13:18:38 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,21 @@ static int	check_args(t_pipex *pipex)
 		return (1);
 	}
 	return (0);
+}
+
+static void	check_access(t_pipex *pipex, char *cmd, char **cmd_array)
+{
+	if (access(cmd, F_OK) == -1)
+	{
+		if (ft_strchr(cmd, '/'))
+			errno = ENOENT;
+		else
+			errno = 0;
+	}
+	if (access(cmd, X_OK) == -1)
+	{
+		errno = EACCES;
+	}
 }
 
 // static void	first_cmd(t_pipex *pipex, pid_t *pid, int *pipe_fd)
@@ -100,21 +115,6 @@ static int	check_args(t_pipex *pipex)
 // 	close(from_fd2);
 // }
 
-static void	check_access(t_pipex *pipex, char *cmd, char **cmd_array)
-{
-	if (access(cmd, F_OK) == -1)
-	{
-		if (ft_strchr(cmd, '/'))
-			errno = ENOENT;
-		else
-			errno = 0;
-	}
-	if (access(cmd, X_OK) == -1)
-	{
-		errno = EACCES;
-	}
-}
-
 // static int	open_file(char *file, int in_or_out)
 // {
 // 	t_pipex *pipex;
@@ -177,7 +177,7 @@ static inline int	return_exit_code(t_pipex *pipex)
 
 static void	close_files(t_pipex *pipex, int pipe_fd[2])
 {
-	if (pipex->fd_in > -1)
+	if (pipex->fd_in >= -1)
 		close(pipex->fd_in);
 	if (pipex->fd_out > -1)
 		close(pipex->fd_out);
@@ -229,19 +229,23 @@ static void	create_pipe(t_pipex *pipex, char **argv, char **envp)
 // 	close(pipex->pipe_fd[1]);
 // }
 
+
+
 static void	open_files(t_pipex *pipex)
 {
 	pipex->fd_in = open(pipex->argv[1], O_RDONLY);
 	if (pipex->fd_in < 0)
 	{
-		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[1], strerror(errno));
-		exit(1);
+		print_error(pipex->argv[1], strerror(errno));
+		// ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[1], strerror(errno));
+		exit(0); // can you do this?
 	}
 	pipex->fd_out = open(pipex->argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
 	if (pipex->fd_out < 0)
 	{
-		pipex->exitcode = 1;
-		ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[4], strerror(errno));
+		pipex->exitcode = 1; // check if can just exit(1);
+		print_error(pipex->argv[4], strerror(errno));
+		// ft_printf_fd(2, "pipex: %s: %s\n", pipex->argv[4], strerror(errno));
 	}
 }
 

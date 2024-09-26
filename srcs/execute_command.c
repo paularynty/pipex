@@ -6,11 +6,23 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 13:35:45 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/25 16:57:45 by prynty           ###   ########.fr       */
+/*   Updated: 2024/09/26 13:32:09 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
+static void	cmd_error2(t_pipex *pipex, char *cmd, char **split_cmd, char *msg, int to_free)
+{
+	ft_putstr_fd("pipex: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(msg, 2);
+	// ft_printf_fd(2, "pipex: %s: %s\n", cmd, msg);
+	if (to_free)
+		free_array(&split_cmd); // maybe put this separately
+	exit(pipex->exitcode); //tweak this according to exit code
+}
 
 static char	**get_envp_path(char **envp, char **cmd)
 {
@@ -77,7 +89,7 @@ static int	exec_error(t_pipex *pipex, char *path, char **cmd)
 			free(path);
 		if (ft_strchr(cmd[0], '/'))
 		{
-			cmd_error(cmd, "Is a directory\n", TRUE);
+			cmd_error2(pipex, pipex->argv[2], cmd, IS_DIR, TRUE);
 			// exit(126); //cmd error overwrites exit with 127
 			pipex->exitcode = 126;
 		}
@@ -99,22 +111,22 @@ static int	exec_error(t_pipex *pipex, char *path, char **cmd)
 	return (pipex->exitcode);
 }
 
-char	**split_command(char *cmd)
-{
-	int		wordcount;
-	char	**array;
+// char	**split_command(char *cmd)
+// {
+// 	int		wordcount;
+// 	char	**array;
 
-	if (!cmd)
-		return (NULL);
-	if (ft_isspace(cmd))
-		cmd_error(&cmd, "command not found", FALSE);
-	wordcount = count_words(cmd);
-	array = (char **)malloc(sizeof(char *) * (wordcount + 1));
-	if (!array)
-		return (NULL);
-	array = split_word(array, cmd, wordcount, -1);
-	return (array);
-}
+// 	if (!cmd)
+// 		return (NULL);
+// 	if (ft_isspace(cmd))
+// 		cmd_error(&cmd, "command not found", FALSE);
+// 	wordcount = count_words(cmd);
+// 	array = (char **)malloc(sizeof(char *) * (wordcount + 1));
+// 	if (!array)
+// 		return (NULL);
+// 	array = split_word(array, cmd, wordcount, -1);
+// 	return (array);
+// }
 
 void	exec_command(t_pipex *pipex, char *cmd, char **envp)
 {
@@ -123,11 +135,14 @@ void	exec_command(t_pipex *pipex, char *cmd, char **envp)
 
 	// split_cmd = split_command(cmd);
 	split_cmd = ft_split(cmd, ' ');
-	if (!split_cmd)
-		exit(1);
+	if (!split_cmd || !split_cmd[0])
+	{
+		pipex->exitcode = 127; // this only if both cmds OR 2nd cmd invalid, otherwise 0
+		cmd_error2(pipex, cmd, split_cmd, CMD_NOT_FOUND, TRUE);
+	}
 	path = find_path(envp, split_cmd);
 	if (!path)
-		cmd_error(split_cmd, "command not found", TRUE);
+		cmd_error(split_cmd, CMD_NOT_FOUND, TRUE);
 	if (execve(path, split_cmd, envp) == -1)
 		exec_error(pipex, path, split_cmd);
 }
