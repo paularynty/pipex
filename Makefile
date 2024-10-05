@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 12:05:04 by prynty            #+#    #+#              #
-#    Updated: 2024/09/25 15:51:46 by prynty           ###   ########.fr        #
+#    Updated: 2024/10/05 16:31:40 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,10 +48,9 @@ CFLAGS			= -Wall -Wextra -Werror
 LIBFT			= ./libft/libft.a
 
 FILES			= 	pipex.c \
-					pipe_utils.c \
-					command_utils.c \
-					execute_command.c \
-					error_handling.c \
+					errors.c \
+					paths.c \
+					utils.c \
 
 SRCS			= $(addprefix srcs/, $(FILES))
 OBJS			= $(addprefix objs/, $(FILES:.c=.o))
@@ -63,7 +62,7 @@ objs:
 	@mkdir -p libft/objs/
 
 objs/%.o: srcs/%.c | objs
-	@cc $(FLAGS) -c $< -o $@
+	@cc $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
 	@$(COMP_LIBFT)
@@ -71,7 +70,7 @@ $(NAME): $(OBJS)
 	@cp $(LIBFT) .
 	@$(LIBFT_READY)
 	@$(OBJ_READY)
-	@cc -g $(FLAGS) $(SRCS) $(LIBFT) -o $(NAME)
+	@cc -g $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
 	@chmod 777 $(NAME)
 	@$(PIP_READY)
 

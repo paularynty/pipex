@@ -8,3 +8,7 @@ libft.a
 .test.c
 a.out
 ppx_err_tester.sh
+tester_pipex.sh
+srcs_old/
+pipexTester/
+pipex_tester/
