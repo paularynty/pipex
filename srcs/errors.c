@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 16:01:26 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/05 16:32:21 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/06 19:48:34 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	free_array(char ***str)
 
 void	exit_error(t_pipex *pipex, char *msg)
 {
-	pipex->exitcode = 0;
 	ft_putstr_fd("pipex: ", 2);
 	if (errno == EACCES || errno == ENOENT || errno == EISDIR)
 	{
@@ -41,19 +40,16 @@ void	exit_error(t_pipex *pipex, char *msg)
 	exit(pipex->exitcode);
 }
 
-void	exit_cmd_error(t_pipex *pipex, char *cmd, char **cmd_array)
+void	cmd_error(t_pipex *pipex, char *cmd, char **cmd_array)
 {
 	int	error;
 
 	error = errno;
+	ft_putstr_fd("pipex: ", 2);
 	if (errno == EACCES || errno == ENOENT || errno == EISDIR)
-	{
-		ft_putstr_fd("pipex: ", 2);
 		perror(cmd);
-	}
 	else
 	{
-		ft_putstr_fd("pipex: ", 2);
 		ft_putstr_fd(cmd, 2);
 		ft_putendl_fd(": command not found", 2);
 	}
