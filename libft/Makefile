@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/17 18:26:18 by prynty            #+#    #+#              #
-#    Updated: 2024/09/07 19:06:02 by prynty           ###   ########.fr        #
+#    Updated: 2024/10/07 17:26:29 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ NAME 		= libft.a
 SRCS		= ft_atoi.c \
 		  ft_bzero.c \
 		  ft_calloc.c \
+		  ft_free_array.c \
 		  ft_isalnum.c \
 		  ft_isalpha.c \
 		  ft_isascii.c \

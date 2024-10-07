@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:58:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/06 19:48:41 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/07 18:57:36 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ typedef struct s_pipex
 }	t_pipex;
 
 //error_handling.c
-void	free_array(char ***str);
 void	exit_error(t_pipex *pipex, char *msg);
 void	cmd_error(t_pipex *pipex, char *cmd, char **cmd_array);
 
@@ -47,7 +46,7 @@ void	exec_command(t_pipex *pipex, int i);
 
 //utils.c
 void	check_access(t_pipex *pipex, char *cmd, char **cmd_array);
-int		wait_for_children(t_pipex *pipex, pid_t pid1, pid_t pid2);
+int		wait_for_children(t_pipex *pipex, pid_t second_child);
 void	close_all(t_pipex *pipex);
 void	open_file(t_pipex *pipex, int first_or_second);
 void	dup_close(t_pipex *pipex, int first_or_second);

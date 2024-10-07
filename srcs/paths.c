@@ -6,11 +6,28 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 16:31:46 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/06 19:59:51 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/07 19:05:21 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+static char	**get_envp_path(char **envp)
+{
+	char	**envp_path;
+
+	while (*envp && !ft_strnstr(*envp, "PATH=", 5))
+		envp++;
+	if (!*envp)
+	{
+		errno = ENOENT;
+		return (NULL);
+	}
+	envp_path = ft_split(*envp + 5, ':');
+	if (!envp_path)
+		return (NULL);
+	return (envp_path);
+}
 
 static char	*get_full_path(char **envp_path, char *cmd)
 {
@@ -34,46 +51,26 @@ static char	*get_full_path(char **envp_path, char *cmd)
 	return (NULL);
 }
 
-static char	**get_envp_path(char **envp)
-{
-	while (*envp && !ft_strnstr(*envp, "PATH=", 5))
-		envp++;
-	if (!*envp)
-	{
-		errno = ENOENT;
-		return (NULL);
-	}
-	return (ft_split(*envp + 5, ':'));
-}
-
-static char	*get_path(t_pipex *pipex, char *cmd)
-{
-	char	**envp_path;
-	char	*full_path;
-
-	envp_path = get_envp_path(pipex->envp);
-	if (!envp_path)
-		return (NULL);
-	full_path = get_full_path(envp_path, cmd);
-	free_array(&envp_path);
-	return (full_path);
-}
-
 static char	*get_cmd_path(t_pipex *pipex, char *cmd, char **cmd_array)
 {
 	char	*cmd_path;
+	char	**envp_path;
 
 	if (ft_strchr(&cmd[0], '/'))
 	{
 		if (access(cmd, F_OK) == 0)
-			return (ft_strdup(cmd));
+			return (cmd);
 		else
 		{
 			errno = ENOENT;
 			cmd_error(pipex, cmd, cmd_array);
 		}
 	}
-	cmd_path = get_path(pipex, &cmd[0]);
+	envp_path = get_envp_path(pipex->envp);
+	if (!envp_path)
+		return (NULL);
+	cmd_path = get_full_path(envp_path, &cmd[0]);
+	ft_free_array(&envp_path);
 	return (cmd_path);
 }
 

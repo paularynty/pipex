@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 15:58:45 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/06 20:00:26 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/07 18:59:06 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,26 @@ void	check_access(t_pipex *pipex, char *cmd, char **cmd_array)
 	}
 }
 
-int	wait_for_children(t_pipex *pipex, pid_t pid1, pid_t pid2)
+int	wait_for_children(t_pipex *pipex, pid_t second_child)
 {
 	int	status;
-	int	exitcode;
+	int	retval;
 	int	wait_count;
 
-	exitcode = 0;
 	wait_count = 2;
 	while (wait_count > 0)
 	{
-		pid1 = waitpid(-1, &status, 0);
-		if (pid1 == -1)
+		retval = waitpid(-1, &status, 0);
+		if (retval == -1)
 		{
 			exit_error(pipex, "waitpid failed");
 			break ;
 		}
 		wait_count--;
-		if (pid1 == pid2 && WIFEXITED(status))
-			exitcode = WEXITSTATUS(status);
+		if (retval == second_child && WIFEXITED(status))
+			pipex->exitcode = WEXITSTATUS(status);
 	}
-	return (exitcode);
+	return (pipex->exitcode);
 }
 
 void	close_all(t_pipex *pipex)

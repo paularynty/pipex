@@ -6,45 +6,27 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 16:01:26 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/06 19:48:34 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/07 18:30:55 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	free_array(char ***str)
-{
-	size_t	i;
-
-	i = 0;
-	if (*str)
-	{
-		while ((*str)[i] != NULL)
-			free((*str)[i++]);
-		free(*str);
-		*str = NULL;
-	}
-}
-
 void	exit_error(t_pipex *pipex, char *msg)
 {
 	ft_putstr_fd("pipex: ", 2);
 	if (errno == EACCES || errno == ENOENT || errno == EISDIR)
-	{
-		perror(msg);
 		pipex->exitcode = 1;
-	}
-	else
-		perror(msg);
+	perror(msg);
 	close_all(pipex);
 	exit(pipex->exitcode);
 }
 
 void	cmd_error(t_pipex *pipex, char *cmd, char **cmd_array)
 {
-	int	error;
+	int	exitcode;
 
-	error = errno;
+	exitcode = errno;
 	ft_putstr_fd("pipex: ", 2);
 	if (errno == EACCES || errno == ENOENT || errno == EISDIR)
 		perror(cmd);
@@ -54,11 +36,9 @@ void	cmd_error(t_pipex *pipex, char *cmd, char **cmd_array)
 		ft_putendl_fd(": command not found", 2);
 	}
 	if (cmd_array)
-		free_array(&cmd_array);
-	if (cmd && ft_strchr(cmd, '/'))
-		free(cmd);
+		ft_free_array(&cmd_array);
 	close_all(pipex);
-	if (error == EACCES || error == EISDIR)
+	if (exitcode == EACCES || exitcode == EISDIR)
 		exit(126);
 	else
 		exit(127);

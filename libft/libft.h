@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:24:42 by prynty            #+#    #+#             */
-/*   Updated: 2024/09/07 19:03:50 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:26:10 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	*ft_memset(void *str, int c, size_t len);
+void	ft_free_array(char ***str);
 
 //string functions
 char	**ft_split(char const *s, char c);

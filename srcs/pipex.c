@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 11:45:27 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/06 19:43:25 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/07 18:41:07 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,31 @@ static void	init_struct(t_pipex *pipex, int argc, char **argv, char **envp)
 
 static int	run_pipex(t_pipex *pipex)
 {
-	pid_t	pid1;
-	pid_t	pid2;
+	pid_t	first_child;
+	pid_t	second_child;
 
 	if (pipe(pipex->pipe_fd) == -1)
 		exit_error(pipex, "pipe failed");
-	pid1 = fork();
-	if (pid1 < 0)
+	first_child = fork();
+	if (first_child < 0)
 		exit_error(pipex, "first child fork failed");
-	if (pid1 == 0)
+	if (first_child == 0)
 	{
 		open_file(pipex, FIRST);
 		dup_close(pipex, FIRST);
 		exec_command(pipex, FIRST);
 	}
-	pid2 = fork();
-	if (pid2 < 0)
+	second_child = fork();
+	if (second_child < 0)
 		exit_error(pipex, "second child fork failed");
-	if (pid2 == 0)
+	if (second_child == 0)
 	{
 		open_file(pipex, SECOND);
 		dup_close(pipex, SECOND);
 		exec_command(pipex, SECOND);
 	}
 	close_all(pipex);
-	return (wait_for_children(pipex, pid1, pid2));
+	return (wait_for_children(pipex, second_child));
 }
 
 int	main(int argc, char **argv, char **envp)
